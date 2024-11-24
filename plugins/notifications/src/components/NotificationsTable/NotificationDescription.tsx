@@ -13,26 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Typography from '@material-ui/core/Typography';
+import { MarkdownContent } from '@backstage/core-components';
 import Button from '@material-ui/core/Button';
 import { useState } from 'react';
 
 const MAX_LENGTH = 100;
 
+const unescapeString = (str: string): string => {
+  return str
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '\r')
+    .replace(/\\t/g, '	')
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, '\\')
+    .replace(/&#(\d+);/g, (_: string, dec: string) =>
+      String.fromCharCode(parseInt(dec, 10)),
+    )
+    .replace(/&([^;]+);/g, (entity: string) => {
+      const entities: Record<string, string> = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&quot;': '"',
+        '&#39;': "'",
+      };
+      return entities[entity] || entity;
+    });
+};
+
 export const NotificationDescription = (props: { description: string }) => {
-  const { description } = props;
+  const description = unescapeString(props?.description) ?? '';
   const [shown, setShown] = useState(false);
-  const isLong = description.length > MAX_LENGTH;
+  const isLong =
+    description.length > MAX_LENGTH || description.indexOf('\n') > 0;
 
   if (!isLong) {
-    return <Typography variant="body2">{description}</Typography>;
+    return <MarkdownContent content={description} />;
   }
 
   if (shown) {
     return (
-      <Typography variant="body2">
-        {description}{' '}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+        }}
+      >
+        <MarkdownContent content={description} />
         <Button
+          style={{ whiteSpace: 'nowrap' }}
           variant="text"
           size="small"
           onClick={() => {
@@ -41,13 +71,27 @@ export const NotificationDescription = (props: { description: string }) => {
         >
           Show less
         </Button>
-      </Typography>
+      </div>
     );
   }
   return (
-    <Typography variant="body2">
-      {description.substring(0, MAX_LENGTH)}...{' '}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+      }}
+    >
+      <MarkdownContent
+        content={`${description.substring(
+          0,
+          description.indexOf('\n') > 0
+            ? description.indexOf('\n')
+            : MAX_LENGTH,
+        )}...`}
+      />
       <Button
+        style={{ whiteSpace: 'nowrap' }}
         variant="text"
         size="small"
         onClick={() => {
@@ -56,6 +100,6 @@ export const NotificationDescription = (props: { description: string }) => {
       >
         Show more
       </Button>
-    </Typography>
+    </div>
   );
 };

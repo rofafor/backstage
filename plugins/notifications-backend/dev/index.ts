@@ -47,6 +47,11 @@ const randomTitle = (): string => {
 const notificationDescriptions = [
   'There is a problem in the backstage',
   'See the sound engineer, please',
+  'Detailed description with more than 100 characters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  'Detailed description without Markdown. # Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  '# Short Markdown description\n- First &amp; second item\n- Third &#35; **item**',
+  '# Detailed Markdown description with more than 100 characters\n1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n1. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  '',
   undefined,
 ];
 const randomDescription = (): string | undefined => {
