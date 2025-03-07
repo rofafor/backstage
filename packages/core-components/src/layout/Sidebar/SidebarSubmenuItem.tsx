@@ -64,8 +64,11 @@ const useStyles = makeStyles(
       width: '100%',
     },
     selected: {
-      background: '#6f6f6f',
-      color: theme.palette.common.white,
+      // background: theme.palette.navigation.navItem?.hoverBackground || "#6f6f6f",
+      // background: theme.palette.navigation.submenu?.background || "#6f6f6f",
+      // background: '#6f6f6f',
+      color: theme.palette.navigation.selectedColor,
+      // color: theme.palette.common.white,
     },
     label: {
       margin: theme.spacing(1.75),
